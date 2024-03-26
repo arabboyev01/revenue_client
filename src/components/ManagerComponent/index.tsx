@@ -1,5 +1,5 @@
 const ManagerComponent = () => {
 
-    return <h1>manager component</h1>
+    return <h1>Manager Component</h1>
 }
 export default ManagerComponent

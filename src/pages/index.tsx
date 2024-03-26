@@ -16,18 +16,17 @@ export default function Home() {
                 setLoading(false)
                 setLogged(true)
 
-                if(data.data.role === 'admin'){
+                if (data.data.role === 'admin') {
                     router.push('/admin')
                 }
 
-                if(data.data.role === 'staff'){
+                if (data.data.role === 'staff') {
                     router.push('/staff')
                 }
             }
             if (!data.success) {
                 setLogged(false)
             }
-            console.log(data)
         })
     }, [router])
 
