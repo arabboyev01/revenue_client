@@ -28,7 +28,12 @@ class ApiService {
         const mainUrl = `${this.mainUrl}/${endpoint}`
 
         try {
-            const response: any = await fetch(mainUrl)
+            const response: any = await fetch(mainUrl, {
+                method: "GET",
+                headers: { 
+                    "Authorization": `${typeof window !== "undefined" && window.localStorage.getItem("token")}`
+                },
+            })
 
             const res = await response.json()
 
@@ -44,7 +49,7 @@ class ApiService {
             const response: any = await fetch(mainUrl, {
                 method: "POST",
                 headers: { 
-                    "Authorization": `${typeof window !== "undefined" && window.localStorage.getItem("accessToken")}`
+                    "Authorization": `${typeof window !== "undefined" && window.localStorage.getItem("token")}`
                 },
                 body: data,
             })

@@ -36,6 +36,7 @@
 .error-message {
   color: #bf0000;
   font-size: 16px;
+  text-transform: capitalize;
 }
 
 label {
