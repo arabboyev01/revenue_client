@@ -1,70 +1,60 @@
-import React, { FC, useState } from "react"
-import useForm from "./useForms"
-import validate from "./LoginFormValidation"
+import { api } from '@/pages/api';
+import { useRouter } from 'next/router';
+import React, { FormEvent, useState } from 'react'
 
-const LoginComponent: FC<{parentCallback: (value: boolean) => void}> = (props) => {
-  const { values, errors, handleChange, handleSubmit } = useForm(login, validate)
+const Login = () => {
 
-  const [loggedIn, setLoggedIn] = useState(false)
+    const router = useRouter()
 
-  function login() {
-    setLoggedIn(true)
-    props.parentCallback(true)
-    return 
-  }
+    const [username, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+    const [remember, setRemember] = useState(false)
 
-  return (
-    <div className="section is-fullheight">
-      <div className="container">
-        <div className="column is-6 is-offset-3">
-          <div className="box">
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit} noValidate>
-              <div className="field">
-                <label className="label">Email Address</label>
-                <div className="control">
-                  <input
-                    autoComplete="off"
-                    className={`input ${errors?.email && "is-danger"}`}
-                    type="email"
-                    name="email"
-                    onChange={handleChange}
-                    value={values.email || ""}
-                    required
-                  />
-                  {errors.email && (
-                    <p className="help is-danger">{errors.email}</p>
-                  )}
-                </div>
-              </div>
-              <div className="field">
-                <label className="label">Password</label>
-                <div className="control">
-                  <input
-                    className={`input ${errors.password && "is-danger"}`}
-                    type="password"
-                    name="password"
-                    onChange={handleChange}
-                    value={values.password || ""}
-                    required
-                  />
-                </div>
-                {errors.password && (
-                  <p className="help is-danger">{errors.password}</p>
-                )}
-              </div>
-              <button
-                type="submit"
-                className="button is-block is-info is-fullwidth"
-              >
-                Login
-              </button>
-            </form>
-          </div>
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        api.postData('login', { username, password, remember }).then((data) => {
+            if (!data.success) setError(data.message)
+            else {
+                localStorage.setItem('token', data.token)
+                setError('')
+                router.push('/')
+            }
+        })
+    }
+
+    return (
+        <div className='login-page'>
+            <div className="login-container">
+                <h2 className='login'>Login</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="email">Username:</label>
+                        <input
+                            type="text"
+                            id="email"
+                            value={username}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    {error && <p className='error-message'>{error}</p>}
+                    <button type="submit" className='login-button'>Login</button>
+                </form>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
-export default LoginComponent
+export default Login;
