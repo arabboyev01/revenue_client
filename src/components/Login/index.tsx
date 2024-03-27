@@ -19,7 +19,7 @@ const Login = () => {
             else {
                 localStorage.setItem('token', data.token)
                 setError('')
-                router.push('/')
+                router.push(`/${data.role}`)
             }
         })
     }

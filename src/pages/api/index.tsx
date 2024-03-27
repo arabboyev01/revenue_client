@@ -24,7 +24,7 @@ class ApiService {
             console.error(error)
         }
     }
-    async getData(endpoint: string) {
+    async getWithToken(endpoint: string) {
         const mainUrl = `${this.mainUrl}/${endpoint}`
 
         try {
@@ -42,23 +42,24 @@ class ApiService {
             console.error(error)
         }
     }
-    async postWithToken<T extends BodyInit >(endpoint: string, data: T) {
+    async postWithToken<T>(endpoint: string, data: T) {
         const mainUrl = `${this.mainUrl}/${endpoint}`
 
         try {
             const response: any = await fetch(mainUrl, {
                 method: "POST",
                 headers: { 
+                    "Content-Type": "application/json",
                     "Authorization": `${typeof window !== "undefined" && window.localStorage.getItem("token")}`
                 },
-                body: data,
+                body: JSON.stringify(data),
             })
 
             const res = await response.json()
 
             return await res
         } catch (error: any) {
-            console.error(error);
+            console.error(error)
         }
     }
     async putData<T extends BodyInit >(endpoint: string, data: T) {
